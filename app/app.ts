@@ -5,9 +5,7 @@ import cookieParser from "cookie-parser";
 import { CLIENT_URL, MONGODB_URL, PORT } from "./constants";
 import routes from "./routes/index";
 const { bookRoute, borrowRoute, libraryRoute, userRoute } = routes;
-
-
-
+import cron from './util/cron'
 //Creating instance of express
 const app: Application = express();
 
@@ -22,7 +20,10 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
+
 
 //Routes
 app.use("/api/users", userRoute);
@@ -43,5 +44,8 @@ mongoose
 app.listen(PORT, () => {
   console.log(`Server running@${PORT}`);
 });
+
+
+cron
 
 export default app;
