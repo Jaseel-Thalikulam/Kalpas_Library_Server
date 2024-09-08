@@ -11,7 +11,7 @@ export const ImageUploader = multer({
     fileSize: 2 * 1024 * 1024,
   },
   storage: multer.diskStorage({
-    destination: "./tmp/uploads",
+    destination: "/tmp",
     filename: (req, file, cb) => {
       const suffix = Date.now() + "-" + `${Math.random()}`.substring(2);
       console.log(suffix, "suffix");
