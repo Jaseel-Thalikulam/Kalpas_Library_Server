@@ -1,0 +1,64 @@
+{
+  "user_login_success": "Login successful",
+  "user_register_success": "User registered successfully",
+  "user_exists": "User with this contact number already exists",
+  "admin_exists": "An Admin already exists",
+  "failed_register_user": "Failed to register user",
+  "failed_login_user": "Failed to login user",
+  "user_not_found": "User not found",
+  "invalid_password": "Invalid password",
+
+  "library_fetched_success": "Fetched all libraries successfully",
+  "library_by_id_success": "Fetched library by ID successfully",
+  "library_not_found": "Library not found",
+  "failed_fetch_libraries": "Failed to fetch libraries",
+  "failed_fetch_library_by_id": "Failed to fetch library by ID",
+  "library_created_success": "Library created successfully",
+  "failed_create_library": "Failed to create library",
+  "library_updated_success": "Library updated successfully",
+  "failed_update_library": "Failed to update library",
+  "library_deleted_success": "Library deleted successfully",
+  "failed_delete_library": "Failed to delete library",
+
+  "book_added_success": "Book added to inventory successfully",
+  "book_already_owned": "Book is already owned by a library",
+  "failed_add_book_inventory": "Failed to add book to inventory",
+  "book_removed_success": "Book removed from inventory successfully",
+  "book_not_in_inventory": "Book is not in this library's inventory",
+  "failed_remove_book_inventory": "Failed to remove book from inventory",
+
+  "library_inventory_fetched_success": "Fetched library inventory successfully",
+  "no_books_found_on_specified_library": "No books found for the specified library",
+  "failed_fetch_library_inventory": "Failed to fetch library inventory",
+
+  "not_authorized_library_manager": "You are not authorized to manage this library",
+  "book_not_found": "Book not found",
+
+  "book_borrowed_success": "Book borrowed successfully",
+  "book_already_borrowed": "Book is already borrowed",
+  "failed_borrow_book": "Failed to borrow book",
+  "insufficient_funds": "Insufficient funds in wallet",
+
+  "book_returned_success": "Book returned successfully",
+  "book_not_borrowed_by_user": "Book is not borrowed by this user",
+  "failed_return_book": "Failed to return book",
+
+  "books_fetched_success": "Fetched all books successfully",
+  "no_books_found": "No books found",
+  "failed_fetch_books": "Failed to fetch books",
+
+  "book_fetched_by_id_success": "Fetched book by ID successfully",
+  "invalid_book_id": "Invalid book ID",
+  "failed_fetch_book_by_id": "Failed to fetch book by ID",
+
+  "book_created_success": "Book created successfully",
+  "failed_create_book": "Failed to create book",
+
+  "book_updated_success": "Book updated successfully",
+  "not_authorized_to_update_book": "Not authorized to update this book",
+  "failed_update_book": "Failed to update book",
+
+  "book_deleted_success": "Book deleted successfully",
+  "not_authorized_to_delete_book": "Not authorized to delete this book",
+  "failed_delete_book": "Failed to delete book"
+}

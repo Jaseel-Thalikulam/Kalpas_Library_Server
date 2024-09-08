@@ -5,6 +5,7 @@ const UserSchema: Schema = new Schema({
   contactNumber: { type: String, required: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
+  language:{type:String,required:true},
   role: {
     type: String,
     enum: ["author", "borrower", "admin", "libraryManager"],

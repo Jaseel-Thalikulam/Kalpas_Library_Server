@@ -1,38 +1,35 @@
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
-import fs from "fs";
 import { uploadFileAndGetPublicUrl } from "../firebase";
 import Book from "../models/book.model";
 import { CustomRequest } from "../interfaces/customRequest.interface";
 export const getAllBooks = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   try {
     // Fetch all books from MongoDB
     const books = await Book.find(); // Fetch all documents in the "books" collection
 
     // If no books are found, return a 404 status
     if (books.length === 0) {
-      res.status(404).json({ message: "No books found" });
-      return;
+     return res.status(404).json({ message: req.t("no_books_found") });
+    
     }
 
     // Respond with the books if successful
-    res.status(200).json({
-      message: "Fetched all books successfully",
-      books,
-    });
+   return res.status(200).json({
+     message: req.t("books_fetched_success"),
+     books,
+   });
   } catch (error) {
-    console.error("Error fetching books:", error);
-    res.status(500).json({ error: "Failed to fetch books" });
+   return res.status(500).json({ error: req.t("failed_fetch_books") });
   }
 };
 
 export const getBookById = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   try {
     // Extract the book ID from the request parameters
     const { id } = req.params;
@@ -42,45 +39,35 @@ export const getBookById = async (
 
     // If the book is not found, return a 404 status
     if (!book) {
-      res.status(404).json({ message: "Book not found" });
-      return;
+     return res.status(404).json({ message: req.t("no_books_found") });
+    
     }
 
     // Respond with the book if successful
-    res.status(200).json({
-      message: "Fetched book by ID successfully",
-      book,
-    });
+   return res.status(200).json({
+     message: req.t("book_fetched_by_id_success"),
+     book,
+   });
   } catch (error) {
-    console.error("Error fetching book by ID:", error);
-
     // If the error is related to an invalid MongoDB ObjectID
     if (error instanceof Error) {
       // If the error is related to an invalid MongoDB ObjectID
       if ((error as any).kind === "ObjectId") {
-        res.status(400).json({ error: "Invalid book ID" });
-        return;
+      return res.status(400).json({ error: req.t("invalid_book_id") });
+      
       }
     }
 
     // Handle any other errors
-    res.status(500).json({ error: "Failed to fetch book by ID" });
+  return res.status(500).json({ error: req.t("failed_fetch_book_by_id") });
   }
 };
 
 export const createBook = async (
   req: CustomRequest,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   // Create a new book logic
-  console.log(req.body, "i am bod");
-
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array() });
-    return;
-  }
 
   try {
     const { bookName, description, genre } = req.body;
@@ -97,25 +84,19 @@ export const createBook = async (
         author,
       });
 
-      res.status(201).json({ message: "Book created successfully" });
-      return;
+      return res.status(201).json({ message: req.t("book_created_success") });
     }
 
-    res
-      .status(400)
-      .json({ message: "Failed to Create Book: No file uploaded" });
-    return;
+    return res.status(400).json({ message: req.t("failed_create_book") });
   } catch (error) {
-    console.log(error);
-
-    res.status(500).json({ error: "Failed to create book" });
+    return res.status(500).json({ error: req.t("failed_create_book") });
   }
 };
 
 export const updateBook = async (
   req: CustomRequest,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -126,8 +107,8 @@ export const updateBook = async (
 
     // Check if the book was found
     if (!book) {
-      res.status(404).json({ message: "Book not found" });
-      return;
+     return res.status(404).json({ message: req.t("book_not_found") });
+    
     }
 
     if (Array.isArray(req.files)) {
@@ -137,8 +118,10 @@ export const updateBook = async (
 
     // Check if the authorId matches the book's author
     if (book.author.toString() !== authorId) {
-      res.status(403).json({ message: "Not authorized to delete this book" });
-      return;
+      return res
+        .status(403)
+        .json({ message: req.t("not_authorized_to_update_book") });
+    
     }
 
     // Find the book by ID and update it with the new data
@@ -149,24 +132,23 @@ export const updateBook = async (
 
     // Check if the book was found and updated
     if (!updatedBook) {
-      res.status(404).json({ message: "Book not found" });
-      return;
+     return res.status(404).json({ message: req.t("book_not_found") });
+      
     }
 
-    res.status(200).json({
-      message: "Book updated successfully",
+   return res.status(200).json({
+      message: req.t("book_updated_success"),
       data: updatedBook,
     });
   } catch (error) {
-    console.error("Error updating book:", error);
-    res.status(500).json({ error: "Failed to update book" });
+   return res.status(500).json({ error: req.t("failed_update_book") });
   }
 };
 
 export const deleteBook = async (
   req: CustomRequest,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   try {
     const { id } = req.params;
     const authorId = req.userId;
@@ -176,23 +158,26 @@ export const deleteBook = async (
 
     // Check if the book was found
     if (!book) {
-      res.status(404).json({ message: "Book not found" });
-      return;
+      return res.status(404).json({ message: req.t("book_not_found") });
+     
     }
 
     // Check if the authorId matches the book's author
     if (book.author.toString() !== authorId) {
-      res.status(403).json({ message: "Not authorized to delete this book" });
-      return;
+     return res
+       .status(403)
+       .json({ message: req.t("not_authorized_to_delete_book") });
+     
     }
 
     // Delete the book
     await Book.findByIdAndDelete(id);
 
     // Successfully deleted the book
-    res.status(200).json({ message: "Book deleted successfully" });
+   return res
+     .status(200)
+     .json({ message: req.t("not_authorized_to_delete_book") });
   } catch (error) {
-    console.error("Error deleting book:", error);
-    res.status(500).json({ error: "Failed to delete book" });
+    return res.status(500).json({ error: req.t("failed_delete_book") });
   }
 };

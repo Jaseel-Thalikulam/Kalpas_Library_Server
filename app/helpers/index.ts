@@ -26,6 +26,11 @@ export const generateRefreshToken = (user: IUser) => {
 
 // Define the validation rules
 export const validateRegisterUser = [
+  body("language")
+    .isString()
+    .withMessage("Language must be string")
+    .isIn(["en", "hi"])
+    .withMessage("Role must be one of the following: en, hi"),
   body("contactNumber")
     .isMobilePhone("en-IN")
     .withMessage("Please provide a valid contact number"),
@@ -39,7 +44,9 @@ export const validateRegisterUser = [
     .isString()
     .withMessage("Role must be a string")
     .isIn([AUTHOR, BORROWER, ADMIN, LIBRARYMANAGER]) // Adjust roles as needed
-    .withMessage("Role must be one of the following: author, borrower"),
+    .withMessage(
+      "Role must be one of the following: author, borrower ,libraryManager"
+    ),
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -48,6 +55,7 @@ export const validateRegisterUser = [
     next();
   },
 ];
+
 export const validateBorrowBookFields = [
   body("bookId").isMongoId().withMessage("Please provide a valid BookId"),
   body("borrowCharge").isNumeric().withMessage("Borrow Charge must be string"),
@@ -165,6 +173,13 @@ export const validateNonFileFields = [
     .withMessage("Genre is required")
     .isString()
     .withMessage("Genre must be a string"),
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
 ];
 
 export async function isJwtPayloadValid(

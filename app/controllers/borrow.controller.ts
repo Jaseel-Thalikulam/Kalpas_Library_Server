@@ -14,25 +14,24 @@ export const borrowBook = async (
     // Check if the book exists
     const book = await Book.findById(bookId);
     if (!book) {
-      return res.status(404).json({ error: "Book not found" });
+      return res.status(404).json({ error: req.t("book_not_found") });
     }
 
     // Check if the book is already borrowed
     if (book.currentBorrower) {
-      return res.status(400).json({ error: "Book is already borrowed" });
+      return res.status(400).json({ error: req.t("book_already_borrowed") });
     }
 
     // Check if the user exists
     const user = await User.findById(borrowerId);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: req.t("user_not_found") });
     }
 
     // Check if the user has enough balance in their wallet
     if (user.walletAmount < borrowCharge) {
-      return res.status(400).json({ error: "Insufficient funds in wallet" });
+      return res.status(400).json({ error: req.t("insufficient_funds") });
     }
-
 
     //We can implement any payment integrations like stripe,razorPay here
 
@@ -47,18 +46,18 @@ export const borrowBook = async (
     await book.save();
 
     return res.status(200).json({
-      message: "Book borrowed successfully",
+      message: req.t("book_borrowed_success"),
       walletBalance: user.walletAmount,
     });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to borrow book" });
+    return res.status(500).json({ error: req.t("failed_borrow_book") });
   }
 };
 
 export const returnBook = async (
   req: CustomRequest,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   try {
     const bookId = req.params.id;
     const userId = req.userId; // Assuming user ID is sent in the request body
@@ -66,21 +65,21 @@ export const returnBook = async (
     // Find the book by ID
     const book = await Book.findById(bookId);
     if (!book) {
-      res.status(404).json({ error: "Book not found" });
-      return;
+     return res.status(404).json({ error: req.t("book_not_found") });
+      
     }
 
     // Check if the book is currently borrowed
     if (!book.currentBorrower || book.currentBorrower.toString() !== userId) {
-      res.status(400).json({ error: "Book is not borrowed by this user" });
-      return;
+     return res.status(400).json({ error: req.t("book_not_borrowed_by_user") });
+  
     }
 
     // Find the user who is returning the book
     const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ error: "User not found" });
-      return;
+    return res.status(404).json({ error: req.t("user_not_found") });
+      
     }
 
     // Set the current borrower to null
@@ -88,8 +87,8 @@ export const returnBook = async (
 
     // Save the updated book
 
-    res.status(200).json({ message: "Book returned successfully" });
+    return res.status(200).json({ message: req.t("book_returned_success") });
   } catch (error) {
-    res.status(500).json({ error: "Failed to return book" });
+    return res.status(500).json({ error: req.t("failed_return_book") });
   }
 };

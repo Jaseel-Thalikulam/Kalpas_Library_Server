@@ -6,28 +6,23 @@ import { ADMIN, JWT_SECRET } from "../constants";
 import { generateAccessToken, generateRefreshToken } from "../helpers";
 import { body, validationResult } from "express-validator";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import i18next from "i18next";
 export const registerUser = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { contactNumber, password, role } = req.body;
-  const errors = validationResult(req);
+  const { contactNumber, password, role, name, language } = req.body;
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
   try {
     const existingUser = await User.findOne({ contactNumber });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ error: "User with this contact number already exists" });
+      return res.status(400).json({ error: req.t("user_exists") });
     }
 
     if (role === ADMIN) {
       const isAdminExist = await User.findOne({ role: role });
       if (isAdminExist) {
-        return res.status(400).json({ error: "An Admin already exist" });
+        return res.status(400).json({ error: req.t("admin_exists") });
       }
     }
 
@@ -39,16 +34,16 @@ export const registerUser = async (
       contactNumber,
       role,
       password: hashedPassword,
+      name,
+      language,
     });
 
     // Save the user to the database
     await newUser.save();
 
-    return res.status(201).json({ message: "User registered successfully" });
+    return res.status(201).json({ message: req.t("user_register_success") });
   } catch (error) {
-    console.log(error);
-
-    return res.status(500).json({ error: "Failed to register user" });
+    return res.status(500).json({ error: req.t("failed_register_user") });
   }
 };
 
@@ -68,13 +63,13 @@ export const loginUser = async (
     // Find the user by contact number
     const user = await User.findOne({ contactNumber });
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: req.t("user_not_found") });
     }
 
     // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid password" });
+      return res.status(401).json({ error: req.t("invalid_password") });
     }
 
     // Generate an access token
@@ -83,10 +78,12 @@ export const loginUser = async (
     // Generate a refresh token
     const refreshToken = generateRefreshToken(user);
 
+    res.cookie("i18next", user.language);
+    res.cookie("accessToken", accessToken);
+    res.cookie("refreshToken", refreshToken);
+
     return res.status(200).json({
-      message: "User logged in successfully",
-      accessToken,
-      refreshToken,
+      message: req.t("user_login_success"),
     });
   } catch (error) {
     return res.status(500).json({ error: "Failed to login user" });

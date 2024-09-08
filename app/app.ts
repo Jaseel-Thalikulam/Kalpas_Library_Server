@@ -5,7 +5,36 @@ import cookieParser from "cookie-parser";
 import { CLIENT_URL, MONGODB_URL, PORT } from "./constants";
 import routes from "./routes/index";
 const { bookRoute, borrowRoute, libraryRoute, userRoute } = routes;
-import cron from './util/cron'
+
+  
+import cron from "./util/cron";
+import i18next from "i18next";
+import i18nextFsBackend from "i18next-fs-backend";
+import i18nextHttpMiddleware from "i18next-http-middleware";
+
+i18next
+  .use(i18nextFsBackend)
+  .use(i18nextHttpMiddleware.LanguageDetector)
+  .init(
+    {
+      fallbackLng: "en",
+      detection: {
+        order: ["cookie"], // Specify how language detection should work
+      },
+      preload: ["en", "hi"],
+      backend: {
+        loadPath: "./app/locales/{{lng}}/translation.json", // Path to the translation files
+      },
+    },
+    (err, t) => {
+      if (err) {
+        console.error("i18next initialization error:", err);
+      } else {
+        console.log("i18next initialized successfully");
+      }
+    }
+  );
+ 
 //Creating instance of express
 const app: Application = express();
 
@@ -15,6 +44,7 @@ const corsOptions = {
   methods: "GET,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
+app.use(i18nextHttpMiddleware.handle(i18next));
 
 app.use(cors(corsOptions));
 
@@ -23,6 +53,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
+
 
 
 //Routes

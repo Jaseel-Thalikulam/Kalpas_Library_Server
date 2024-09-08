@@ -5,5 +5,6 @@ export interface IUser {
   password: string;
   _id: ObjectId;
   role: string;
+  language:"en"|"hi"
   walletAmount: number;
 }

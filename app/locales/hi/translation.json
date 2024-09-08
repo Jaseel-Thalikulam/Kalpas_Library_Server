@@ -1,0 +1,64 @@
+{
+  "user_login_success": "लॉगिन सफल",
+  "user_register_success": "उपयोगकर्ता सफलतापूर्वक पंजीकृत",
+  "user_exists": "इस संपर्क नंबर वाला उपयोगकर्ता पहले से मौजूद है",
+  "admin_exists": "एक व्यवस्थापक पहले से मौजूद है",
+  "failed_register_user": "उपयोगकर्ता को पंजीकृत करने में विफल",
+  "failed_login_user": "उपयोगकर्ता के लॉगिन में विफल",
+  "user_not_found": "उपयोगकर्ता नहीं मिला",
+  "invalid_password": "अमान्य पासवर्ड",
+
+  "library_fetched_success": "सभी पुस्तकालय सफलतापूर्वक प्राप्त किए गए",
+  "library_by_id_success": "आईडी द्वारा पुस्तकालय सफलतापूर्वक प्राप्त किया गया",
+  "library_not_found": "पुस्तकालय नहीं मिला",
+  "failed_fetch_libraries": "पुस्तकालय प्राप्त करने में विफल",
+  "failed_fetch_library_by_id": "आईडी द्वारा पुस्तकालय प्राप्त करने में विफल",
+  "library_created_success": "पुस्तकालय सफलतापूर्वक बनाया गया",
+  "failed_create_library": "पुस्तकालय बनाने में विफल",
+  "library_updated_success": "पुस्तकालय सफलतापूर्वक अपडेट किया गया",
+  "failed_update_library": "पुस्तकालय अपडेट करने में विफल",
+  "library_deleted_success": "पुस्तकालय सफलतापूर्वक हटा दिया गया",
+  "failed_delete_library": "पुस्तकालय को हटाने में विफल",
+
+  "book_added_success": "पुस्तक को इन्वेंट्री में सफलतापूर्वक जोड़ा गया",
+  "book_already_owned": "पुस्तक पहले से ही एक पुस्तकालय द्वारा स्वामित्व में है",
+  "failed_add_book_inventory": "पुस्तक को इन्वेंट्री में जोड़ने में विफल",
+  "book_removed_success": "पुस्तक को इन्वेंट्री से सफलतापूर्वक हटा दिया गया",
+  "book_not_in_inventory": "पुस्तक इस पुस्तकालय की इन्वेंट्री में नहीं है",
+  "failed_remove_book_inventory": "पुस्तक को इन्वेंट्री से हटाने में विफल",
+
+  "library_inventory_fetched_success": "पुस्तकालय की इन्वेंट्री सफलतापूर्वक प्राप्त की गई",
+  "no_books_found_on_specified_library": "निर्दिष्ट पुस्तकालय के लिए कोई पुस्तकें नहीं मिलीं",
+  "failed_fetch_library_inventory": "पुस्तकालय की इन्वेंट्री प्राप्त करने में विफल",
+
+  "not_authorized_library_manager": "आप इस पुस्तकालय का प्रबंधन करने के लिए अधिकृत नहीं हैं",
+  "book_not_found": "पुस्तक नहीं मिली",
+
+  "book_borrowed_success": "पुस्तक सफलतापूर्वक उधार ली गई",
+  "book_already_borrowed": "पुस्तक पहले से ही उधार ली गई है",
+  "failed_borrow_book": "पुस्तक उधार लेने में विफल",
+  "insufficient_funds": "वॉलेट में अपर्याप्त राशि",
+
+  "book_returned_success": "पुस्तक सफलतापूर्वक वापस की गई",
+  "book_not_borrowed_by_user": "पुस्तक इस उपयोगकर्ता द्वारा उधार नहीं ली गई है",
+  "failed_return_book": "पुस्तक वापस करने में विफल",
+
+  "books_fetched_success": "सभी पुस्तकें सफलतापूर्वक प्राप्त की गईं",
+  "no_books_found": "कोई पुस्तकें नहीं मिलीं",
+  "failed_fetch_books": "पुस्तकें प्राप्त करने में विफल",
+
+  "book_fetched_by_id_success": "आईडी द्वारा पुस्तक सफलतापूर्वक प्राप्त की गई",
+  "invalid_book_id": "अमान्य पुस्तक आईडी",
+  "failed_fetch_book_by_id": "आईडी द्वारा पुस्तक प्राप्त करने में विफल",
+
+  "book_created_success": "पुस्तक सफलतापूर्वक बनाई गई",
+  "failed_create_book": "पुस्तक बनाने में विफल",
+
+  "book_updated_success": "पुस्तक सफलतापूर्वक अपडेट की गई",
+  "not_authorized_to_update_book": "इस पुस्तक को अपडेट करने के लिए अधिकृत नहीं हैं",
+  "failed_update_book": "पुस्तक अपडेट करने में विफल",
+
+  "book_deleted_success": "पुस्तक सफलतापूर्वक हटा दी गई",
+  "not_authorized_to_delete_book": "इस पुस्तक को हटाने के लिए अधिकृत नहीं हैं",
+  "failed_delete_book": "पुस्तक को हटाने में विफल"
+}

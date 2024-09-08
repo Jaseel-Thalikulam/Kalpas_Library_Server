@@ -32,11 +32,11 @@ export const getAllLibraries = async (
     ]);
 
     return res.status(200).json({
-      message: "Fetched all libraries successfully",
+      message: req.t("library_fetched_success"),
       libraries,
     });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch libraries" });
+    return res.status(500).json({ error: req.t("failed_fetch_libraries") });
   }
 };
 
@@ -73,16 +73,16 @@ export const getLibraryById = async (
     ]);
 
     if (!library.length) {
-      return res.status(404).json({ error: "Library not found" });
+      return res.status(404).json({ error: req.t("library_not_found") });
     }
 
     // Return the fetched library in the response
     return res.status(200).json({
-      message: "Fetched library by ID successfully",
+      message: req.t("library_by_id_success"),
       library: library[0], // Access the first item since aggregation returns an array
     });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch library by ID" });
+    return res.status(500).json({ error: req.t("failed_fetch_library_by_id") });
   }
 };
 
@@ -97,11 +97,11 @@ export const createLibrary = async (
     const newLibrary = await Library.create(libraryData);
 
     return res.status(201).json({
-      message: "Library created successfully",
+      message: req.t("library_created_success"),
       library: newLibrary,
     });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to create library" });
+    return res.status(500).json({ error: req.t("failed_create_library") });
   }
 };
 
@@ -120,16 +120,16 @@ export const updateLibrary = async (
     );
 
     if (!updatedLibrary) {
-      return res.status(404).json({ error: "Library not found" });
+      return res.status(404).json({ error: req.t("library_not_found") });
     }
 
     // Return the updated library
     return res.status(200).json({
-      message: "Library updated successfully",
+      message: req.t("library_updated_success"),
       library: updatedLibrary,
     });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to update library" });
+    return res.status(500).json({ error: req.t("failed_update_library") });
   }
 };
 
@@ -137,25 +137,21 @@ export const deleteLibrary = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
+  const { id } = req.params;
   try {
-    try {
-      const { id } = req.params;
-      // Find and delete the library by ID
-      const deletedLibrary = await Library.findByIdAndDelete(id);
+    // Find and delete the library by ID
+    const deletedLibrary = await Library.findByIdAndDelete(id);
 
-      if (!deletedLibrary) {
-        return res.status(404).json({ error: "Library not found" });
-      }
-
-      // Return success response if deletion was successful
-      return res.status(200).json({
-        message: "Library deleted successfully",
-      });
-    } catch (error) {
-      return res.status(500).json({ error: "Failed to delete library" });
+    if (!deletedLibrary) {
+      return res.status(404).json({ error: req.t("library_not_found") });
     }
+
+    // Return success response if deletion was successful
+    return res.status(200).json({
+      message: req.t("library_deleted_success"),
+    });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to delete library" });
+    return res.status(500).json({ error: req.t("failed_delete_library") });
   }
 };
 
@@ -211,16 +207,18 @@ export const getLibraryInventory = async (
     if (books.length === 0) {
       return res
         .status(404)
-        .json({ message: "No books found for the specified library" });
+        .json({ message: req.t("no_books_found_on_specified_library") });
     }
 
     // Return the fetched books
     return res.status(200).json({
-      message: "Fetched library inventory successfully",
+      message: req.t("library_inventory_fetched_success"),
       books,
     });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch library inventory" });
+    return res
+      .status(500)
+      .json({ error: req.t("failed_fetch_library_inventory") });
   }
 };
 
@@ -235,27 +233,25 @@ export const addBookToInventory = async (
     const library = await Library.findById(id);
 
     if (!library) {
-      return res.status(404).json({ error: "Library not found" });
+      return res.status(404).json({ error: req.t("library_not_found") });
     }
 
     // Check if the authenticated user is the manager of the library
     if (library.libraryManager.toString() !== libraryManagerId) {
       return res
         .status(403)
-        .json({ error: "You are not authorized to manage this library" });
+        .json({ error: req.t("not_authorized_library_manager") });
     }
     // Find the book by its ID
     const book = await Book.findById(bookId);
 
     if (!book) {
-      return res.status(404).json({ error: "Book not found" });
+      return res.status(404).json({ error: req.t("book_not_found") });
     }
 
     // Check if the book already belongs to a library
     if (book.libraryOwned) {
-      return res
-        .status(400)
-        .json({ error: "Book is already owned by a library" });
+      return res.status(400).json({ error: req.t("book_already_owned") });
     }
 
     // Update the book's libraryOwned field with the provided libraryId
@@ -265,11 +261,9 @@ export const addBookToInventory = async (
     await book.save();
 
     // Respond with success message
-    return res
-      .status(201)
-      .json({ message: "Book added to inventory successfully" });
+    return res.status(201).json({ message: req.t("book_added_success") });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to add book to inventory" });
+    return res.status(500).json({ error: req.t("failed_add_book_inventory") });
   }
 };
 
@@ -285,40 +279,36 @@ export const removeBookFromInventory = async (
     const library = await Library.findById(libraryId);
 
     if (!library) {
-      return res.status(404).json({ error: "Library not found" });
+      return res.status(404).json({ error: req.t("library_not_found") });
     }
 
     // Check if the authenticated user is the manager of the library
     if (library.libraryManager.toString() !== libraryManagerId) {
       return res
         .status(403)
-        .json({ error: "You are not authorized to manage this library" });
+        .json({ error: req.t("not_authorized_library_manager") });
     }
 
     // Find the book by its ID
     const book = await Book.findById(bookId);
 
     if (!book) {
-      return res.status(404).json({ error: "Book not found" });
+      return res.status(404).json({ error: req.t("book_not_found") });
     }
 
     // Check if the book is currently in this library's inventory
     if (book.libraryOwned?.toString() !== libraryId) {
-      return res
-        .status(400)
-        .json({ error: "Book is not in this library's inventory" });
+      return res.status(400).json({ error: req.t("book_not_in_inventory") });
     }
 
     // Remove the book from the library's inventory
     await Book.updateOne({ _id: bookId }, { $unset: { libraryOwned: 1 } });
 
     // Respond with success message
-    return res
-      .status(200)
-      .json({ message: "Book removed from inventory successfully" });
+    return res.status(200).json({ message: req.t("book_removed_success") });
   } catch (error) {
     return res
       .status(500)
-      .json({ error: "Failed to remove book from inventory" });
+      .json({ error: req.t("failed_remove_book_inventory") });
   }
 };
