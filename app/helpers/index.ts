@@ -196,7 +196,7 @@ export async function isJwtPayloadValid(
   return false;
 }
 
-export function deleteOldFiles(directory = "uploads", maxAgeInMinutes = 5) {
+export function deleteOldFiles(directory = "tmp", maxAgeInMinutes = 5) {
   try {
     const currentTime = new Date();
     const maxAge = maxAgeInMinutes * 60 * 1000;
