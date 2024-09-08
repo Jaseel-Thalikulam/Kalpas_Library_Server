@@ -55,7 +55,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-
+app.get('/',(req,res)=>res.send("Api Up"))
 //Routes
 app.use("/api/users", userRoute);
 app.use("/api/books", bookRoute);
