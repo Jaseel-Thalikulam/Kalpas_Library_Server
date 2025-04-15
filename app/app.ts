@@ -5,8 +5,6 @@ import cookieParser from "cookie-parser";
 import { CLIENT_URL, MONGODB_URL, PORT } from "./constants";
 import routes from "./routes/index";
 const { bookRoute, borrowRoute, libraryRoute, userRoute } = routes;
-
-  
 import cron from "./util/cron";
 import i18next from "i18next";
 import i18nextFsBackend from "i18next-fs-backend";

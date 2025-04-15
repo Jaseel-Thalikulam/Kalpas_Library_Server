@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { borrowBook, returnBook } from "../controllers/borrow.controller";
+import { borrowBookFromLibrary, returnBook } from "../controllers/borrow.controller";
 import { userAuth } from "../middlewares/user.middleware";
 import { BORROWER } from "../constants";
 import { validateBorrowBookFields } from "../helpers";
@@ -10,7 +10,7 @@ borrowRoute.post(
   "/",
   userAuth([BORROWER]),
   validateBorrowBookFields,
-  borrowBook
+  borrowBookFromLibrary
 );
 borrowRoute.put("/return/:id", userAuth([BORROWER]), returnBook);
 

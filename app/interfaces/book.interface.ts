@@ -7,5 +7,18 @@ export interface IBook extends Document {
   genre: string;
   coverImage: string;
   libraryOwned: Types.ObjectId;
-  currentBorrower?:Types.ObjectId|string
+  currentBorrower?: Types.ObjectId | string;
+}
+
+export interface BookData {
+  bookName: string;
+  description: string;
+  genre: string;
+  author: string;
+  filePath: string;
+}
+
+export interface UpdateBookData {
+  id: string;
+  updateData: any;
 }

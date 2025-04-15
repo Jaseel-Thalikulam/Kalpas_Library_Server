@@ -1,45 +1,38 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import User from "../models/user.model";
-import { IUser } from "../interfaces/user.interface";
-import { ADMIN, JWT_SECRET } from "../constants";
+import { ADMIN } from "../constants";
 import { generateAccessToken, generateRefreshToken } from "../helpers";
-import { body, validationResult } from "express-validator";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import i18next from "i18next";
+import {validationResult } from "express-validator";
+import { createUser, findUserByContact, isAdminAlreadyPresent } from "../services/user.service";
+import { IUser, IUserInput } from "../interfaces/user.interface";
 export const registerUser = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { contactNumber, password, role, name, language } = req.body;
+  const { contactNumber, password, role, name, language }: IUserInput =
+    req.body;
 
   try {
-    const existingUser = await User.findOne({ contactNumber });
+    const existingUser = await findUserByContact(contactNumber);
     if (existingUser) {
       return res.status(400).json({ error: req.t("user_exists") });
     }
 
     if (role === ADMIN) {
-      const isAdminExist = await User.findOne({ role: role });
-      if (isAdminExist) {
+     const isAdminExists = await isAdminAlreadyPresent();
+      if (isAdminExists) {
         return res.status(400).json({ error: req.t("admin_exists") });
       }
     }
 
-    // Hash the password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    const newUser = new User({
+    await createUser({
       contactNumber,
+      password,
       role,
-      password: hashedPassword,
       name,
       language,
     });
-
-    // Save the user to the database
-    await newUser.save();
 
     return res.status(201).json({ message: req.t("user_register_success") });
   } catch (error) {
@@ -61,7 +54,8 @@ export const loginUser = async (
     const { contactNumber, password } = req.body;
 
     // Find the user by contact number
-    const user = await User.findOne({ contactNumber });
+    const user = await findUserByContact(contactNumber);
+
     if (!user) {
       return res.status(404).json({ error: req.t("user_not_found") });
     }
@@ -85,6 +79,7 @@ export const loginUser = async (
     return res.status(200).json({
       message: req.t("user_login_success"),
     });
+
   } catch (error) {
     return res.status(500).json({ error: "Failed to login user" });
   }
